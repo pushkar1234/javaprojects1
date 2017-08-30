@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -102,11 +103,16 @@ public class UserController {
 	    	return "redirect:/";
 	    }
 	 @RequestMapping(value = "/add", method = RequestMethod.POST)
+	 
 	 public String submitForm(@ModelAttribute("user") User user,
-				BindingResult result, SessionStatus status) 
+				BindingResult result, SessionStatus status)
       {
-         System.out.println("addNewaddNewaddNew");
+		 
+		 if(user.getUserName().isEmpty())
+			 throw new NullPointerException();
 
+         System.out.println("addNewaddNewaddNew");
+       
          userValidator.validate(user, result);
 
        if (result.hasErrors()) {
@@ -121,4 +127,11 @@ public class UserController {
        }
 		 
 	    }
+	 
+	 
+	 @ExceptionHandler(NullPointerException.class)
+	 public String m1(){
+		 return "NullPointerException";
+	 }
+	 
     }
